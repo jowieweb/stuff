@@ -1,7 +1,0 @@
-{
-	"mqttIP" : "mqtt://127.0.0.1",
-	"mysqlIP" : "127.0.0.1",
-	"mysqluser" : " ",
-	"mysqlpw"	: " ",
-	"mysqldb"	: " "
-}
