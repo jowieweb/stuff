@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/bs/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/bs/mine.css">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+	<div class="blueback">
+		<div class="row">
+			<div class="col-1">☰</div>
+			<div class="col-10">
+				<h2 class="myheadline">HomeWeb</h2>
+			</div>
+			<div class="col-1"> </div>			
+		</div>  
+		<div class="myheadselector">
+			<div class="row">
+
+				<div class="col">
+					hallo
+				</div>
+
+				<div class="col">
+					hallo
+				</div>
+
+				<div class="col">
+					hallo
+				</div>
+
+				<div class="col">
+					hallo
+				</div>
+
+				<div class="col">
+					hallo
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="margin-top:25px" />
+	
+	<div class="container">
+		<div class="mycol4">
+			<div class="col-md-4">
+				<div class="mytron"> 
+					<div class="row">
+						<div class="col-1">
+							<img id="img-id-2" src="/power_off.png" alt="" class="myOnOffIcon">
+						</div>
+						<div class="col-6" style="margin:0px;padding:0px;margin-left:5px;">
+							<a >
+								<h5>Deckenlampe</h5>
+							</a>
+						</div>
+						<div class="col-4">
+							<div class="myInnerPullRight">
+								<div class="onoffswitch">
+									<h6>
+										<input name="onoffswitch" class="onoffswitch-checkbox" id="sw-id-4" checked="checked" onclick="blub(this)" type="checkbox">
+										<label class="onoffswitch-label" for="sw-id-4"></label>
+									</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+	<div class="col-md-4">
+	<canvas id="myChart" width="40" height="40"></canvas>
+	</div>
+	<script src="Chart.bundle.min.js"></script>
+<script>
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    datasets: [{
+      label: 'apples',
+      data: [12, 12, 12, 12, 12, 9, 12]
+    }]
+  }
+});
+</script>
+	
+  </body>
+</html>

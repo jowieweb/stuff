@@ -1,0 +1,201 @@
+<% include partials/header %>
+<% include partials/js %>
+
+<div id="mySidenav" class="sidenav" onclick="closeNav()">
+	<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">☰</a>
+
+	<% trons.forEach(function(value, key) { %>				
+				
+		<h4>
+			<a onclick="tabClick(this)" id="<%=key %>-header" style="color:#FFFFFF;"> 
+				<%= key %>
+			</a>
+		</h4>
+	<% }, trons); %>	
+	<br><br><br>	
+
+
+	<div class="extra">
+		<a href="/chart"> Chart</a>
+	</div>
+	<br><br><br>
+	<div class="extra">
+		<a href="/reload"> Reload</a>
+	</div>
+</div>
+
+
+
+<div class="blueback">
+	<div class="row" style="margin:0px;padding:0px">
+		<div class="col-1" onclick="openNav()"> 
+			<h2 class="myheadline" style="font-size:30px;cursor:pointer;float: left;">
+				☰
+			</h2>
+		</div>
+		<div class="col-10">
+			<h2 class="myheadline">HomeWeb</h2>
+		</div>
+		<div class="col-1"> </div>			
+	</div>  
+	<div class="myheadselector">
+		<div class="row" style="margin:0px;padding:0px">
+			<% trons.forEach(function(value, key) { %>				
+				<div class="col-<%= Math.floor(12/trons.size) %>" style="margin:0px;padding:0px">					
+					<h4>
+						<a onclick="tabClick(this)" id="<%=key %>-header"> 
+							<%= key %>
+						</a>
+					</h4>
+				</div>
+			<% }, trons); %>			
+		</div>
+	</div>
+	
+</div>
+<div style="margin-top:25px" />
+<div class="container" >
+<% trons.forEach(function(value, key) { %>
+	<div id="<%= key %>" style="display: block;">
+		<div class="row">
+			<% trons.get(key).forEach(function(subValue, subKey) { %>		
+				
+				<div class="col-md-4" style="margin-left: 0px; margin-right: 0px; padding: 0px;">
+					<div class="mytron"> 
+						<% for (var gui in subValue){	%>
+							<div class="row">
+							<% if( idToObjecta.get(subValue[gui].id).type == 'Button'){ %>
+								<div class="col-1">
+									<% if(idToValue.get(subValue[gui].id)==1){	%>
+										<img id="img-id-<%= subValue[gui].id %>" src="/power_on.png" alt="" class="myOnOffIcon">
+									<% } else  {%>
+										<img id="img-id-<%= subValue[gui].id %>" src="/power_off.png" alt="" class="myOnOffIcon">
+									<% } %>
+								</div>
+								<div class="col-6" style="margin:0px;padding:0px;margin-left:5px;">
+									<a onclick="getChart(this)" id="<%=subValue[gui].id%>-text">
+										<h5 class="myText"><%= subValue[gui].titel   %> <br></h5>
+									</a>
+								</div>
+								
+								<div class="col-4">
+									<div class="myInnerPullRight">
+										<div class="onoffswitch">
+											<h6 class="myText">
+												<% if(idToValue.get(subValue[gui].id)==1){	%>
+													<input name="onoffswitch" class="onoffswitch-checkbox" id="<%= subValue[gui].id %>-switch" checked onclick="blub(this)" type="checkbox">
+												<% }else{ %>
+													<input name="onoffswitch" class="onoffswitch-checkbox" id="<%= subValue[gui].id %>-switch"  onclick="blub(this)" type="checkbox">
+												<% } %>
+												<label class="onoffswitch-label" for="<%= subValue[gui].id %>-switch"></label>
+											</h6>
+										</div>
+									</div>
+								</div>
+								
+							<% } else if( idToObjecta.get(subValue[gui].id).type.startsWith('Sensor') ){%>
+							
+								<div class="col-1">
+									<img id="img-id-<%= subValue[gui].id %>" src="/sensor.png" alt="" class="myOnOffIcon">
+								</div>
+								<div class="col-6" style="margin:0px;padding:0px;margin-left:5px;">
+									<a onclick="getChart(this)" id="<%=subValue[gui].id%>-text">
+										<h5 class="myText"><%= subValue[gui].titel   %> <br></h5>
+									</a>
+								</div>
+								<div class="col-4">
+									<div class="myInnerPullRight">
+										<h5 class="myText" id="<%=subValue[gui].id%>-sensor"><%= idToValue.get(subValue[gui].id) %></h6>
+									</div>
+								</div>
+							
+							
+							<% } else if ( idToObjecta.get(subValue[gui].id).type == 'Slider') { %>
+								<div class="col-1">
+									<img id="img-id-<%= subValue[gui].id %>" src="/sound.png" alt="" class="myOnOffIcon">
+								</div>
+								<div class="col-6" style="margin:0px;padding:0px;margin-left:5px;">
+									<a>
+										<h5 class="myText"><%= subValue[gui].titel   %> <br></h5>
+									</a>
+								</div>
+								<div class="col-4">
+									<div class="myInnerPullRight">
+										<h5 class="myText" id="<%=subValue[gui].id%>-sensor"><%= idToValue.get(subValue[gui].id) %></h6>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-2" style="margin-left: 0px; margin-right: 0px; padding: 0px;">
+									<a onclick="volDown(this)" id="<%=subValue[gui].id%>-sliderDown"> 
+										<img src="minus.png" width="30" height="30" style="margin-left:10px">
+									</a>
+								</div>
+								<div class="col-8" style="margin-left: 0px; margin-right: 0px; padding: 0px;">
+									<input id="<%=subValue[gui].id%>-slider" min="0" max="27" value="<%= idToValue.get(subValue[gui].id) %>" style="float: left; margin: 5px" type="range">
+								</div>
+								<div class="col-2" style="margin-left: 0px; margin-right: 0px; padding: 0px;">
+									<a onclick="volUp(this)" id="<%=subValue[gui].id%>-sliderUp"> 
+										<img src="plus.png" style="float: right; margin-right:10px;" width="30" height="30" >
+									</a>
+								</div>
+							<% } %>
+							</div>
+							<hr style="margin-bottom: 5px; margin-top:8px">
+						<% } %>
+					</div>
+				</div>					
+			<% }, trons.get(key)); %>	
+		</div>	
+	</div>
+<% }, trons); %>
+</div>	
+
+<div id="chart_div" class="white_content" onclick="document.getElementById('chart_div').style.display='none';">
+	
+		
+			
+				
+
+			<!--	 
+			<div style="position: relative;">
+				<div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;" aria-label="A chart.">
+				<canvas id="speedChart"></canvas> 
+				</div>
+			</div>
+			<div id="charti"></div>
+			-->
+			
+
+
+			
+		
+		
+	
+
+</div>
+<!--
+
+<ul>
+<% trons.forEach(function(value, key) { %>
+	<li><%= key %><ul>
+	<% trons.get(key).forEach(function(subValue, subKey) { %>
+		<li><%= subKey %><ul>
+		<% for (var gui in subValue){	%>
+			<li><%= subValue[gui].titel   %> 
+			<% if( idToObjecta.get(subValue[gui].id).type == 'Button'){ %>
+			<button type="button" id='<%= subValue[gui].id %>' onclick="buttonClick(<%= subValue[gui].id %>)"><%=  idToValue.get(subValue[gui].id) %></button> 
+			<% } %>
+			<div id='ans<%= subValue[gui].id %>'><%=  idToValue.get(subValue[gui].id) %></div>
+			
+			</li>
+		<% } %></ul></li>
+	<% }, trons.get(key)); %>
+	</ul></li>
+<% }, trons); %>
+</ul>
+-->
+
+
+<% include partials/footer %>
+
