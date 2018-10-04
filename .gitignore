@@ -204,4 +204,4 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/node,python
 
-/HomeWeb2/config.json
+HomeWeb2/config.json
