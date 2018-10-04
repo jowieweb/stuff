@@ -1,0 +1,10 @@
+{
+    "name": "ESPMy",
+    "keywords": "mqtt, iot, esp8266",
+    "description": "MEINS!",
+    "version": "1.0.0",
+    "frameworks": "arduino",
+    "platforms": [
+        "espressif"
+    ]
+}

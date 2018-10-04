@@ -1,0 +1,30 @@
+#######################################
+# Syntax Coloring Map For ESPMy
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+ESPMy	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+
+loop 				KEYWORD2
+addWlan				KEYWORD2
+subscribe			KEYWORD2
+publish				KEYWORD2
+connect				KEYWORD2
+getIP				KEYWORD2
+setConnectionLED	KEYWORD2
+addToClientName		KEYWORD2
+enableOTA			KEYWORD2
+disconnect			KEYWORD2
+setLimitTrys		KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
