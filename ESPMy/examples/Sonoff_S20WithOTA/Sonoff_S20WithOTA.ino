@@ -23,8 +23,8 @@ bool interrupted = false;
 long lastInterrupt = 0;
 
 /*
- * setup function. called once
- */
+   setup function. called once
+*/
 void setup() {
   /* input button of sonoff is on 0 */
   pinMode(0, INPUT);
@@ -40,12 +40,12 @@ void setup() {
   myESP.enableOTA(OTANAME, OTAPW);
   myESP.subscribe(TOPIC);
   myESP.connect(cb, BROKER);
-
+  Serial.println("test");
 }
 
 /*
- * loop function
- */
+   loop function
+*/
 void loop() {
   myESP.loop();
   int timeNow = millis();
@@ -62,43 +62,50 @@ void loop() {
     oldstate = state;
   }
 
-  /* check if an interrupt occured */
-  if (interrupted) {
-    interrupted = false;
-    /* check if bounced */
-    if (lastInterrupt < millis() - 100) {
-      lastInterrupt = millis();
-      if (state == 1) {
-        off();
-      } else {
-        on();
-      }
-    }
-  }
-}
-
-/* 
- *interrupt handler for button 
- */
-void interrupt() {
-  interrupted = true;
 }
 
 /*
- * callback for mqtt 
+  interrupt handler for button
+*/
+void interrupt() {
+  /* check if bounced */
+  if (lastInterrupt < millis() - 100) {
+    lastInterrupt = millis();
+    interrupted = true;
+    toggle();
+  }
+
+}
+
+/*
+ * toggle the relay
+ * from off to on
+ * from on to off
  */
+void toggle() {
+  if (state == 1) {
+    off();
+  } else {
+    on();
+  }
+}
+
+/*
+   callback for mqtt
+*/
 void cb(char* topic, byte* payload, unsigned int length) {
   if (payload[0] == '1') {
     on();
-
   } else if (payload[0] == '0') {
     off();
+  } else if(payload[0] == 't'){
+    toggle();
   }
 }
 
 /*
- * turn the relay off
- */
+   turn the relay off
+*/
 void off() {
   digitalWrite(12, LOW);
   state = 0;
@@ -109,8 +116,8 @@ void off() {
 }
 
 /*
- * turn the relay on
- */
+   turn the relay on
+*/
 void on()
 {
   digitalWrite(12, HIGH);
