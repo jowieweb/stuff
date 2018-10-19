@@ -62,7 +62,7 @@ pinMode(BUTTONPIN, INPUT);
   pinMode(RELAYPIN, OUTPUT);
   attachInterrupt(BUTTONPIN, interrupt, HIGH);
   Serial.begin(115200);
-  Serial.println(TOPIC);
+  
 
   myESP = ESPMy(SSID, PASSWORD);
   
@@ -71,6 +71,7 @@ pinMode(BUTTONPIN, INPUT);
 
   myESP.enableOTA(OTANAME, OTAPW);
 #ifdef MQTT
+  Serial.println(TOPIC);
   myESP.subscribe(TOPIC);
   myESP.connect(cb, BROKER);
 #else
