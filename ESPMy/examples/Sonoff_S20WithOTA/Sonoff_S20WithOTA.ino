@@ -57,41 +57,75 @@ long lastInterrupt = 0;
    setup function. called once
 */
 void setup() {
-  /* input button of sonoff is on 0 */
-  pinMode(0, INPUT);
-  /* LED is on 12 */
-  pinMode(12, OUTPUT);
-  attachInterrupt(0, interrupt, HIGH);
+
+pinMode(BUTTONPIN, INPUT);
+  pinMode(RELAYPIN, OUTPUT);
+  attachInterrupt(BUTTONPIN, interrupt, HIGH);
   Serial.begin(115200);
   Serial.println(TOPIC);
 
   myESP = ESPMy(SSID, PASSWORD);
-  myESP.setConnectionLED(13);
+  
+  myESP.setDeviceName(OTANAME);
+  myESP.setConnectionLED(LEDPIN);
 
   myESP.enableOTA(OTANAME, OTAPW);
+#ifdef MQTT
   myESP.subscribe(TOPIC);
   myESP.connect(cb, BROKER);
+#else
+  myESP.connect();
+#endif
+
+#ifdef WEBINTERFACE
+  setupWebinterface();
+#endif
+
+#ifdef ALEXA
+  fauxmo.enable(true);
+  fauxmo.addDevice(ALEXADEVNAME);
+  fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state) {
+        if(state){
+          on();
+        } else {
+          off();
+        }
+  });
+  fauxmo.onGetState([](unsigned char device_id, const char * device_name) {
+        return state ==1;
+  });
+#endif
+
   Serial.println("test");
 }
-
 /*
    loop function
 */
 void loop() {
+  #ifdef ALEXA
+  fauxmo.handle();
+#endif 
   myESP.loop();
   int timeNow = millis();
   /* check if the relay state has changed, or 1 minute has passed */
   if (state != oldstate || timeNow > lastSend + 600000) {
     lastSend = timeNow;
     /* publish the relay state via mqtt */
+#ifdef MQTT
     if (state == 1) {
       myESP.publish(RETURN, "1");
     }
     else {
       myESP.publish(RETURN, "0");
     }
+#endif
     oldstate = state;
   }
+
+#ifdef WEBINTERFACE
+  server.handleClient();
+#endif
+
 
 }
 
@@ -120,7 +154,7 @@ void toggle() {
     on();
   }
 }
-
+#ifdef MQTT
 /*
    callback for mqtt
 */
@@ -133,12 +167,12 @@ void cb(char* topic, byte* payload, unsigned int length) {
     toggle();
   }
 }
-
+#endif
 /*
    turn the relay off
 */
 void off() {
-  digitalWrite(12, LOW);
+  digitalWrite(RELAYPIN, LOW);
   state = 0;
   /* force update */
   oldstate = -1;
@@ -151,10 +185,33 @@ void off() {
 */
 void on()
 {
-  digitalWrite(12, HIGH);
+  digitalWrite(RELAYPIN, HIGH);
   state = 1;
   /* force update */
   oldstate = -1;
   Serial.println("on");
   lastInterrupt = millis();
 }
+
+
+#ifdef WEBINTERFACE
+void setupWebinterface(){
+    server.on("/", []() {
+    if (state == 1) {
+      server.send(200, "text/html", "IS CURRENTLY ON! '/off' to turn it off");
+    } else if (state == 0) {
+      server.send(200, "text/html", "IS CURRENTLY OFF! '/on' to turn it on");
+    }
+  });
+  server.on("/on", []() {
+    server.send(200, "text/html", webPageON);
+    on();
+  });
+  server.on("/off", []() {
+    server.send(200, "text/html", webPageOFF);
+    off();
+  });
+  server.begin();
+}
+
+#endif
