@@ -257,3 +257,7 @@ void ESPMy::setLED(bool on){
 	}
 }
 
+void ESPMy::setDeviceName(String name){
+	WiFi.hostname(name);
+}
+

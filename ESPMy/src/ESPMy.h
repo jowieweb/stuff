@@ -47,7 +47,7 @@ public:
 
 	void enableOTA(const char* hostname, const char* pass);
 	void disconnect();
-	
+	void setDeviceName(String name);
 	void setLimitTrys(bool limit);
 	
 private:

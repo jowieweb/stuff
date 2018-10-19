@@ -1,13 +1,44 @@
+/*
+ * Sketch for SONOFF S20 / S21 
+ * Controll via MQTT / HTTP / Alexa
+ * Supports OTA
+ * Needs ESPMy library 
+ * FAUXMO SEEMS TO WORK ONLY FOR WITH LIB VERSION 2.3.0 ON ESP BOARD VERSION 2.3.0
+ */
 #include <ESP8266mDNS.h>
 #include "ESPMy.h"
 
 #define SSID "SSID"
 #define PASSWORD "PW"
-#define TOPIC "/switchTopic"
-#define RETURN "/switchTopic/actualStatus"
+#define RELAYPIN 12
+#define BUTTONPIN 0
+#define LEDPIN 13
+
 #define OTANAME "SONOFF_S20"
 #define OTAPW "MYCOOLPW"
-#define BROKER "192.168.11.10"
+
+#define MQTT
+#ifdef MQTT
+  #define TOPIC "/switchTopic"
+  #define RETURN "/switchTopic/actualStatus"
+  #define BROKER "192.168.11.10"
+#endif
+
+#define WEBINTERFACE
+#define ALEXA
+
+#ifdef ALEXA
+  #define ALEXADEVNAME "Licht"
+  #include "fauxmoESP.h"
+  fauxmoESP fauxmo;
+#endif
+
+#ifdef WEBINTERFACE
+#include <ESP8266WebServer.h>
+ESP8266WebServer server(80);
+String webPageON = "IS NOW ON!";
+String webPageOFF = "IS NOW OFF!";
+#endif
 
 
 ESPMy myESP;
